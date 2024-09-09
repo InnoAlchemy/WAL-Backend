@@ -13,6 +13,7 @@ interface Blog extends Document {
   likes: number;
   comments: Comment[]; // Updated to be an array of comments
   views: number;
+  category:string;
 }
 
 const blogSchema = new Schema<Blog>({
@@ -50,6 +51,10 @@ const blogSchema = new Schema<Blog>({
     views: {
       type: Number,
       default: 0, // Initialize with 0 views
+    },
+    category: {
+      type: String,
+      required: true,
     },
   }, { timestamps: true });
 const Blog = model<Blog>('Blog', blogSchema);
