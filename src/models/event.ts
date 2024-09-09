@@ -10,6 +10,7 @@ export interface EventDocument extends Document {
   tags: string[];
   pictures: string[];
   type: string;
+  category:string;
 }
 
 const eventSchema = new Schema<EventDocument>({
@@ -47,6 +48,11 @@ const eventSchema = new Schema<EventDocument>({
     type: String,
     required: true,
     trim: true,
+  },
+  category:{
+    type :String,
+    required:true,
+    trim:true,
   },
 });
 
