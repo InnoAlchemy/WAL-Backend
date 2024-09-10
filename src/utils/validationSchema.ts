@@ -119,6 +119,11 @@ export const CreateEventSchema = yup.object({
   pictures: yup.array().of(yup.string()).optional(),
   type: yup.string().required(),
 });
+export const CreateCategorySchema = yup.object({
+  name: yup.string().required(),
+  description: yup.string().optional(),
+  type: yup.string().required(),
+});
 
 // Schema for updating an event
 export const UpdateEventSchema = yup.object({
