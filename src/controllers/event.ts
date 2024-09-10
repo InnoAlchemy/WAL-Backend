@@ -1,4 +1,4 @@
-import { RequestHandler } from "express";
+import e, { RequestHandler } from "express";
 import { isValidObjectId, Types } from "mongoose";
 import Event, { EventDocument } from "#/models/event";
 import User, { UserDocument } from "#/models/user";
@@ -232,8 +232,14 @@ interface TicketCreationOptions {
         const event = await Event.findById(event_id);
         if (!event) return res.status(404).json({ error: "Event not found" });
 
+        if(event.places-event.reservedPlaces<quantity)return res.status(404).json({ error: "Not enough tickets available" });
+
         // Generate QR Code
         const qrCodeLink = await generateQRCodeImage(event_id);
+        
+        event.reservedPlaces+=quantity;
+        
+        await event.save();
 
         // Create the ticket
         const ticket = await Ticket.create({
