@@ -8,6 +8,7 @@ import { sendTicketConfirmationEmail } from "#/utils/mail";
 import QRCode from "qrcode";
 import { FilterQuery } from "#/@types/user";
 import favoriteEvents from "#/models/favoriteEvents";
+import reservation from "#/models/reservation";
 
 // Create a new event
 export const createEvent: RequestHandler = async (req, res) => {
@@ -240,6 +241,12 @@ interface TicketCreationOptions {
         event.reservedPlaces+=quantity;
         
         await event.save();
+
+        await reservation.create({
+          userId: user_id,
+          eventId: event_id,
+          quantity,
+        })
 
         // Create the ticket
         const ticket = await Ticket.create({
