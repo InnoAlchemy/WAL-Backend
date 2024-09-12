@@ -1,5 +1,5 @@
-import { Schema, model, Document, Types } from "mongoose";
-
+import { Schema, model, Document, Types, } from "mongoose";
+const mongoose=require('mongoose');
 export interface EventDocument extends Document {
   _id: Types.ObjectId; // Ensure this is typed correctly
   title: string;
@@ -12,6 +12,7 @@ export interface EventDocument extends Document {
   type: string;
   places:number;
   reservedPlaces:number;
+  category: Types.ObjectId; 
 }
 
 const eventSchema = new Schema<EventDocument>({
@@ -59,6 +60,11 @@ const eventSchema = new Schema<EventDocument>({
     required: true,
     trim: true,
   },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true
+},
 });
 
 export default model<EventDocument>("Event", eventSchema);

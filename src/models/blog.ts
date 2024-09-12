@@ -1,5 +1,5 @@
-import { Schema, model, Document } from 'mongoose';
-
+import { Schema, model, Document,Types } from 'mongoose';
+const mongoose=require('mongoose');
 interface Comment {
   user: Schema.Types.ObjectId;
   comment: string;
@@ -13,6 +13,8 @@ interface Blog extends Document {
   likes: number;
   comments: Comment[]; // Updated to be an array of comments
   views: number;
+  category:Types.ObjectId;
+  
 }
 
 const blogSchema = new Schema<Blog>({
@@ -51,6 +53,11 @@ const blogSchema = new Schema<Blog>({
       type: Number,
       default: 0, // Initialize with 0 views
     },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+      required: true
+  },
   }, { timestamps: true });
 const Blog = model<Blog>('Blog', blogSchema);
 export default Blog;
