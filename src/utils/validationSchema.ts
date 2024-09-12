@@ -119,11 +119,7 @@ export const CreateEventSchema = yup.object({
   pictures: yup.array().of(yup.string()).optional(),
   type: yup.string().required(),
 });
-export const CreateCategorySchema = yup.object({
-  name: yup.string().required(),
-  description: yup.string().optional(),
-  type: yup.string().required(),
-});
+
 
 // Schema for updating an event
 export const UpdateEventSchema = yup.object({
@@ -197,15 +193,28 @@ export const CreateBlogSchema = yup.object({
   tags: yup.array().of(yup.string()),
   description: yup.string().required('Description is required'),
 });
+export const CreateCategorySchema = yup.object({
+  name: yup.string().required('Name is required'),
+  type: yup.string().required('Type is required'),
+  description: yup.string().required('Description is required'),
+});
 
 export const BlogIdParamSchema = yup.object({
   id: yup.string().required('Blog ID is required').length(24, 'Blog ID must be a valid MongoDB ObjectId'),
+});
+export const CategoryIdParamSchema = yup.object({
+  id: yup.string().required('Category ID is required').length(24, 'Category ID must be a valid MongoDB ObjectId'),
 });
 
 export const UpdateBlogSchema = yup.object().shape({
   title: yup.string(),
   files: yup.array().of(yup.string()),
   tags: yup.array().of(yup.string()),
+  description: yup.string(),
+});
+export const updateCategorySchema = yup.object().shape({
+  name: yup.string(),
+  type: yup.string(),
   description: yup.string(),
 });
 
