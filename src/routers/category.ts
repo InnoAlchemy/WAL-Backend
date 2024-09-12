@@ -12,7 +12,7 @@ router.post('/getCategoryByType', isAuth,  getCategoryByType);
 
 router.get('/:id', isAuth, validate(CategoryIdParamSchema, 'params'), getCategoryById);
 
-router.get('/getAll', isAuth, getAllTypes);
+router.get('/getAllTypes', isAuth, getAllTypes);
 
 router.put('/:id', isAuth, validate(CategoryIdParamSchema, 'params'), validate(updateCategorySchema), updateCategory);
 
