@@ -3,6 +3,7 @@ import { Schema, model, Document } from "mongoose";
 interface Coupon extends Document {
   coupon_key: string;
   usage: number;
+  discount_percentage: number;
 }
 
 const couponSchema = new Schema<Coupon>({
@@ -15,8 +16,12 @@ const couponSchema = new Schema<Coupon>({
   usage: {
     type: Number,
     required: true,
-    default: -1, // -1 indicates infinite usage
+    default: -1, 
   },
-});
+  discount_percentage:{
+    type:Number,
+    required:true,
+  }
+}, { timestamps: true });
 
 export default model<Coupon>("Coupon", couponSchema);

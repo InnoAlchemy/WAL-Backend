@@ -158,6 +158,8 @@ export const CreateCouponSchema = yup.object({
     .integer("Usage must be an integer")
     .min(-1, "Usage must be -1 (infinite) or a positive integer")
     .default(-1),
+    discount_percentage: yup.number()
+    .required("Discount percentage  is required"),
 });
 
 export const CouponIdParamSchema = yup.object({
@@ -174,8 +176,9 @@ export const UpdateCouponSchema = yup.object({
     .min(3, "Coupon key must be at least 3 characters long")
     .max(20, "Coupon key cannot be longer than 20 characters"),
   usage: yup.number()
-    .integer("Usage must be an integer")
-    .min(-1, "Usage must be -1 (infinite) or a positive integer"),
+  .integer("Usage must be an integer")
+  .min(-1, "Usage must be -1 (infinite) or a positive integer"),
+  discount_percentage: yup.number(),
 });
 
 
