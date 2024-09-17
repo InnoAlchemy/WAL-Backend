@@ -10,6 +10,8 @@ export interface UserDocument extends Document {
   tokens: { token: string }[];
   _id: Types.ObjectId;
   favorites: Types.ObjectId[]; // Add favorites property
+  role:string;
+  permissions:[string];
 }
 
 interface Methods{
@@ -37,6 +39,12 @@ const userSchema = new Schema<UserDocument, {}, Methods>(
       type: Boolean,
       default: false,
     },
+    role: {
+      type: String,
+      required:true,
+      enum: ['admin', 'editor', 'viewer'],  // We need to choose these roles ???
+      default: ''  // Default role for new users ????
+    },
     tokens: [
       {
         token: {
@@ -48,6 +56,10 @@ const userSchema = new Schema<UserDocument, {}, Methods>(
   
     favorites: [{ type: Types.ObjectId, ref: "Event" }], // TOO fixx
   },
+  // permissions: {
+  //   type: [String],  // an array of strings
+  //   default: [],     // we should choose the default 
+  // },
   { timestamps: true }
 );
 
