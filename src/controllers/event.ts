@@ -246,7 +246,7 @@ interface TicketCreationOptions {
           userId: user_id,
           eventId: event_id,
           quantity,
-        })
+        })//an integration of stripe will be added here later...
 
         // Create the ticket
         const ticket = await Ticket.create({
