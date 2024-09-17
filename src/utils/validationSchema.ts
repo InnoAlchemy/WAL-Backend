@@ -119,11 +119,7 @@ export const CreateEventSchema = yup.object({
   pictures: yup.array().of(yup.string()).optional(),
   type: yup.string().required(),
 });
-export const CreateCategorySchema = yup.object({
-  name: yup.string().required(),
-  description: yup.string().optional(),
-  type: yup.string().required(),
-});
+
 
 // Schema for updating an event
 export const UpdateEventSchema = yup.object({
@@ -162,6 +158,8 @@ export const CreateCouponSchema = yup.object({
     .integer("Usage must be an integer")
     .min(-1, "Usage must be -1 (infinite) or a positive integer")
     .default(-1),
+    discount_percentage: yup.number()
+    .required("Discount percentage  is required"),
 });
 
 export const CouponIdParamSchema = yup.object({
@@ -178,8 +176,9 @@ export const UpdateCouponSchema = yup.object({
     .min(3, "Coupon key must be at least 3 characters long")
     .max(20, "Coupon key cannot be longer than 20 characters"),
   usage: yup.number()
-    .integer("Usage must be an integer")
-    .min(-1, "Usage must be -1 (infinite) or a positive integer"),
+  .integer("Usage must be an integer")
+  .min(-1, "Usage must be -1 (infinite) or a positive integer"),
+  discount_percentage: yup.number(),
 });
 
 
@@ -197,15 +196,28 @@ export const CreateBlogSchema = yup.object({
   tags: yup.array().of(yup.string()),
   description: yup.string().required('Description is required'),
 });
+export const CreateCategorySchema = yup.object({
+  name: yup.string().required('Name is required'),
+  type: yup.string().required('Type is required'),
+  description: yup.string().required('Description is required'),
+});
 
 export const BlogIdParamSchema = yup.object({
   id: yup.string().required('Blog ID is required').length(24, 'Blog ID must be a valid MongoDB ObjectId'),
+});
+export const CategoryIdParamSchema = yup.object({
+  id: yup.string().required('Category ID is required').length(24, 'Category ID must be a valid MongoDB ObjectId'),
 });
 
 export const UpdateBlogSchema = yup.object().shape({
   title: yup.string(),
   files: yup.array().of(yup.string()),
   tags: yup.array().of(yup.string()),
+  description: yup.string(),
+});
+export const updateCategorySchema = yup.object().shape({
+  name: yup.string(),
+  type: yup.string(),
   description: yup.string(),
 });
 

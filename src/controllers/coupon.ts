@@ -3,15 +3,15 @@ import Coupon from "#/models/coupon";
 
 export const createCoupon: RequestHandler = async (req, res) => {
     try {
-      const { coupon_key, usage } = req.body;
+      const { coupon_key, usage,discount_percentage } = req.body;
   
       // Validate required fields
-      if (!coupon_key || typeof usage !== "number") {
+      if (!coupon_key || typeof usage !== "number" || typeof discount_percentage !== "number") {
         return res.status(400).json({ error: "coupon_key and usage are required." });
       }
   
       // Create a new coupon
-      const coupon = new Coupon({ coupon_key, usage });
+      const coupon = new Coupon({ coupon_key, usage,discount_percentage });
       await coupon.save();
   
       res.status(201).json(coupon);
@@ -54,7 +54,7 @@ export const deleteCoupon: RequestHandler = async (req, res) => {
   export const updateCoupon: RequestHandler = async (req, res) => {
     try {
       const { id } = req.params;
-      const { coupon_key, usage } = req.body;
+      const { coupon_key, usage ,discount_percentage} = req.body;
   
       const coupon = await Coupon.findById(id);
       if (!coupon) {
@@ -63,6 +63,7 @@ export const deleteCoupon: RequestHandler = async (req, res) => {
   
       if (coupon_key !== undefined) coupon.coupon_key = coupon_key;
       if (usage !== undefined) coupon.usage = usage;
+      if (discount_percentage !== undefined) coupon.discount_percentage = discount_percentage;
   
       await coupon.save();
   
