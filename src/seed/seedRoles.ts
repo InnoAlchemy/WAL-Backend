@@ -41,4 +41,6 @@ async function seedRoles() {
 }
 
 // Run the seed function
+// npx ts-node src/seed/seedRoles.ts
+
 seedRoles();
