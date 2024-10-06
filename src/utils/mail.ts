@@ -198,3 +198,5 @@ export const sendTicketConfirmationEmail = async (
     ],
   });
 };
+
+export { generateToken };

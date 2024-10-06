@@ -1,7 +1,8 @@
 import { compare, hash } from "bcrypt";
 import { Model, model, Schema, Document, Types } from "mongoose";
+import { RoleDocument } from "./roles";
 
-// interface (typescript)
+
 export interface UserDocument extends Document {
   userName: string;
   email: string;
@@ -9,13 +10,12 @@ export interface UserDocument extends Document {
   verified: boolean;
   tokens: { token: string }[];
   _id: Types.ObjectId;
-  favorites: Types.ObjectId[]; // Add favorites property
-  role:string;
-  permissions:[string];
+  favorites: Types.ObjectId[];
+  role: Types.ObjectId | RoleDocument;  // Reference to the Role model
 }
 
-interface Methods{
-    comparePassword(password: string): Promise<boolean>
+interface Methods {
+  comparePassword(password: string): Promise<boolean>;
 }
 
 const userSchema = new Schema<UserDocument, {}, Methods>(
@@ -40,10 +40,9 @@ const userSchema = new Schema<UserDocument, {}, Methods>(
       default: false,
     },
     role: {
-      type: String,
-      required:true,
-      enum: ['admin', 'editor', 'viewer'],  // We need to choose these roles ???
-      default: ''  // Default role for new users ????
+      type: Types.ObjectId,
+      ref: "Role",  // Reference the Role model
+      required: true,  // Ensure every user has a role
     },
     tokens: [
       {
@@ -53,27 +52,21 @@ const userSchema = new Schema<UserDocument, {}, Methods>(
         },
       },
     ],
-  
-    favorites: [{ type: Types.ObjectId, ref: "Event" }], // TOO fixx
+    favorites: [{ type: Types.ObjectId, ref: "Event" }],
   },
-  // permissions: {
-  //   type: [String],  // an array of strings
-  //   default: [],     // we should choose the default 
-  // },
   { timestamps: true }
 );
 
-userSchema.pre('save',async function(next){
-    if(this.isModified('password')){
-     this.password = await hash(this.password, 10)
-    }
-     next()
-   })
-   
-   userSchema.methods.comparePassword = async function(password){
-     const result = await compare(password, this.password)
-     return result
-   }
+userSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    this.password = await hash(this.password, 10);
+  }
+  next();
+});
 
+userSchema.methods.comparePassword = async function (password) {
+  const result = await compare(password, this.password);
+  return result;
+};
 
-export default model("User", userSchema) as Model<UserDocument, {}, Methods>;
+export default model<UserDocument>("User", userSchema) as Model<UserDocument, {}, Methods>;

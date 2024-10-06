@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 
 import { CreateUser, verifyEmailRequest } from "#/@types/user";
 import User from "#/models/user";
+import Role from "#/models/roles";
 import { generateToken } from "#/utils/helper";
 
 import emailVerificationToken from "#/models/emailVerificationToken";
@@ -23,8 +24,19 @@ export const register: RequestHandler = async (req: CreateUser, res) => {
       return res.status(400).json({ error: "Email already in use" });
     }
 
-    // Create a new user
-    const user = await User.create({ userName, email, password });
+    // Find the "Client" role
+    const clientRole = await Role.findOne({ name: "Client" });
+    if (!clientRole) {
+      return res.status(500).json({ error: "Client role not found" });
+    }
+
+    // Create a new user and assign the "Client" role
+    const user = await User.create({ 
+      userName, 
+      email, 
+      password, 
+      role: clientRole._id  // Assign the Client role to the user
+    });
 
     // Send verification email
     const token = generateToken();
@@ -34,13 +46,12 @@ export const register: RequestHandler = async (req: CreateUser, res) => {
     });
     sendVerificationMail(token, { userName, email, userId: user._id.toString() });
 
-    res.status(201).json({ user });
+    res.status(201).json({ message: "Registration successful. Please verify your email.", user });
   } catch (error) {
     console.error('Error in register:', error); // Debugging
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 export const verifyEmail: RequestHandler = async (req: verifyEmailRequest, res) => {
   const { token, userId } = req.body;
    const verificationToken = await emailVerificationToken.findOne({
@@ -167,7 +178,7 @@ export const Login: RequestHandler = async (req, res) => {
  if(!matched) return res.status(403).json({error: "Email/Password mismatch!"});
 
 
- const token = jwt.sign({userId: user._id}, JWT_SECRET)
+ const token = jwt.sign({userId: user._id, role: user.role}, JWT_SECRET)
 
  user.tokens.push({token})
 
